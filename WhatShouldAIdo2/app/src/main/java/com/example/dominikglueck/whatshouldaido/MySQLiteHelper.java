@@ -7,15 +7,16 @@ package com.example.dominikglueck.whatshouldaido;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.io.FileOutputStream;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dominik.glueck on 25.07.2016.
@@ -25,29 +26,26 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Database Version
     private static String DB_PATH = "/data/data/com.example.dominikglueck.whatshouldaido/databases/";
 
-    private static final int DATABASE_VERSION = 1;
+
     // Database Name
     private SQLiteDatabase myDataBase;
+    private static final int DATABASE_VERSION = 1;
     private final Context myContext;
 
     private static final String DATABASE_NAME = "lottozahlen.db";
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.myContext = context;
         //Log.d(LOG_TAG, "DbHelper hat die Datenbank: " + getDatabaseName() + " geladen.");
+        this.myContext = context;
     }
     public void CreateDataBase() throws IOException {
 
-        boolean dbExist = checkDataBase();
-
-        if(dbExist){
-            // nix zu tun
-        }else{
+        if(!checkDataBase()){
             this.getReadableDatabase();
+
             try{
                 copyDataBase();
-
             }catch (IOException e) {
                 throw new Error("Error copy db");
             }
@@ -106,7 +104,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        MySQLiteDatabaseCreator.FeedEntry.onCreate(db);
     }
 
     @Override
@@ -140,5 +138,24 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         result= cursor.getString(0);
         cursor.close();
         return result;
+    }
+
+    public List<Result> getEntries(String tablename) {
+        String selectQuery = "SELECT * FROM " + tablename;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        List<Result> resultArrayList = new ArrayList<Result>();
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Result result = new Result();
+                result.setId(cursor.getString(1));
+                result.setContent(cursor.getString(2));
+                // Adding contact to list
+                resultArrayList.add(result);
+            } while (cursor.moveToNext());
+        }
+        // return contact list
+        return resultArrayList;
     }
 }

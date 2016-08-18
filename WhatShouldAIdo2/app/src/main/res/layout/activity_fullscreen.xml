@@ -38,6 +38,7 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
+
         </LinearLayout>
 
         <Button
@@ -55,7 +56,6 @@
             android:text="Ja"
             android:id="@+id/buttonja"
             android:layout_gravity="left|bottom"
-            android:singleLine="true"
             android:clickable="true" />
 
         <Button
@@ -82,6 +82,13 @@
             android:id="@+id/buttonreset"
             android:layout_gravity="center" />
 
+        <TextView
+            android:id="@+id/textfeld"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </FrameLayout>
+
+
 
 </FrameLayout>

@@ -1,20 +1,20 @@
 package com.example.dominikglueck.whatshouldaido;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.database.SQLException;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Switch;
-import android.content.Context;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -192,6 +192,7 @@ public class FullscreenActivity extends AppCompatActivity {
         final MySQLiteHelper helper = new MySQLiteHelper(context);
         try {
             helper.CreateDataBase();
+
         } catch (IOException e) {
             throw new Error("could not create db");
         }
@@ -207,6 +208,18 @@ public class FullscreenActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     variance+="1";
                     helper.option(variance);
+                    MySQLiteHelper msh = new MySQLiteHelper(getApplicationContext());
+                    SQLiteDatabase db = msh.getWritableDatabase();
+                    MySQLiteDatabaseCreator.FeedEntry.newAnswer(db,"testAntwort");
+                    MySQLiteDatabaseCreator.FeedEntry.newQuestion(db,"testFrage");
+
+                    List<Result> res = msh.getEntries("fragen");
+                    String s;
+                    TextView tv = (TextView) findViewById(R.id.textfeld);
+                    for (int i=0; i<res.size(); i++){
+                        s = res.get(i).toString();
+
+                    }
                 }
             });
             nein.setOnClickListener(new View.OnClickListener() {
@@ -238,6 +251,7 @@ public class FullscreenActivity extends AppCompatActivity {
             }
             Textausgabe.setText(Text);
         } // solange bis eine Lösung gefunden wurde
+
 
     }
 
