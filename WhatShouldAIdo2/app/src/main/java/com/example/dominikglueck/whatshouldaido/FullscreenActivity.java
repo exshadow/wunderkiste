@@ -186,7 +186,7 @@ public class FullscreenActivity extends AppCompatActivity {
         Button ja = (Button) findViewById(R.id.buttonja);
         Button nein = (Button) findViewById(R.id.buttonnein);
         Button vielleicht = (Button) findViewById(R.id.buttonvielleicht);
-        Button reset = (Button) findViewByID(R.id.buttonreset);
+        Button reset = (Button) findViewById(R.id.buttonreset);
         String Text;
         context = getApplicationContext();
         final MySQLiteHelper helper = new MySQLiteHelper(context);
